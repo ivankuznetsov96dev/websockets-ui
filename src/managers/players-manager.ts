@@ -1,8 +1,8 @@
-import { DB } from "../db/db.js";
+import { DB } from "../db/db";
 
 export class PlayersManager {
 
-  registerPlayer(name, password) {
+  static registerPlayer(name: string, password: string) {
     if (!DB.players[name]) {
       DB.players[name] = { password, wins: 0 };
     }

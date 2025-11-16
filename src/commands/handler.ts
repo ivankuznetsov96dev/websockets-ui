@@ -1,6 +1,7 @@
-import * as player from '../commands/player.js';
+import { WebSocket } from 'ws';
+import * as player from './player';
 
-export function handleMessage(ws, message) {
+export function handleMessage(ws: WebSocket, message: any) {
   switch (message.type) {
     case 'reg':
       return player.registerPlayer(ws, message);
