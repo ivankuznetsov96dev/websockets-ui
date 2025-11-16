@@ -1,5 +1,6 @@
 import { WebSocketServer, WebSocket } from 'ws';
 import { handleMessage } from '../commands/handler'
+import { WebSocketWithPlayer } from '../models/ws-with-player.interface';
 
 export const wsServer = new WebSocketServer({ port: 3000 });
 
@@ -7,7 +8,7 @@ wsServer.on('listening', () => {
     console.log('WebSocket server is listening on ws://localhost:3000');
 });
 
-wsServer.on('connection', (ws: WebSocket) => {
+wsServer.on('connection', (ws: WebSocketWithPlayer) => {
     console.log('Client connected');
     
     ws.on('message', (message: string | Buffer) => {
