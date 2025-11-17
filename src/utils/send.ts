@@ -24,15 +24,18 @@ export function sendToAll(data: unknown): void {
   }
 }
 
-export function sendToRoom(roomId: string, data: unknown): void {
-  const room = DB.rooms[roomId];
+export function sendToGamePlayers(gameId: string, data: unknown): void {
+  console.log('sendToGamePlayers FUCK!');
+  const game = DB.games[gameId];
 
-  if (!room) {
+  if (!game) {
     return;
   }
 
-  for (const player of room.players) {
+  for (const player of game.players) {
     const ws = DB.sockets[player];
+
+    console.log('CHECK ROOM SEND!: ', player, JSON.stringify(data));
     if (ws) {
       send(ws, data);
     }

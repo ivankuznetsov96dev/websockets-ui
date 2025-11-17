@@ -1,5 +1,4 @@
 import { WebSocket } from 'ws';
-import { send } from "../utils/send";
 import { WebSocketWithPlayer } from '../models/ws-with-player.interface';
 import { GamesManager } from '../managers/games-manager';
 
@@ -7,15 +6,7 @@ export function attack(ws: WebSocket, message: any): void {
   const playerName = (ws as WebSocketWithPlayer).playerName;
   const playerGameId = (ws as WebSocketWithPlayer).playerGameId;
 
-  if (!playerName) {
-    send(ws, {
-      type: 'attack',
-      data: JSON.stringify({
-        error: true,
-        errorText: 'You must register first'
-      }),
-      id: 0
-    });
+  if (!playerName || !playerGameId) {
     return;
   }
 
@@ -27,23 +18,15 @@ export function attack(ws: WebSocket, message: any): void {
       return;
     }
 
-    if (gameId !== gameId || playerGameId !== indexPlayer) {
-      send(ws, {
-        type: 'attack',
-        data: JSON.stringify({
-          error: true,
-          errorText: 'Invalid game or player'
-        }),
-        id: 0
-      });
+    if (playerGameId !== indexPlayer) {
       return;
     }
 
-    console.log('BEFORE processAttack!!!');
+    console.log('BEFORE processAttack!!!', playerName);
 
-    GamesManager.processAttack(gameId, indexPlayer, x, y, playerName);
+    GamesManager.processAttack(gameId, indexPlayer, x, y);
 
-    console.log('AFTER processAttack!!!');
+    // console.log('AFTER processAttack!!!');
     
   } catch (error) {
     console.error('Attack error:', error);
@@ -51,5 +34,17 @@ export function attack(ws: WebSocket, message: any): void {
 }
 
 export function randomAttack(ws: WebSocket, message: any): void {
+  try {
+    const parsedData = JSON.parse(message.data);
+    const { gameId, indexPlayer } = parsedData;
+    const playerGameId = (ws as WebSocketWithPlayer).playerGameId;
 
+    if (!playerGameId || indexPlayer !== playerGameId) {
+      return;
+    }
+
+    GamesManager.randomAttack(gameId, indexPlayer);
+  } catch (error) {
+    console.error('randomAttack error', error);
+  }
 }

@@ -9,9 +9,9 @@ export class WinnersManager {
     DB.players[name].wins = (DB.players[name].wins || 0) + 1;
   }
 
-  static getWinnersList(): { password: string; wins: number }[] {
+  static getWinnersList(): { name: string; password: string; wins: number }[] {
     return Object.values(DB.players)
-      .map((val) => ({ password: val.password, wins: val.wins }))
+      .map((val) => ({ name: val.name, password: val.password, wins: val.wins }))
       .sort((a, b) => b.wins - a.wins);
   }
 }
